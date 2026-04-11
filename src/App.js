@@ -7,6 +7,7 @@ import Offers from './components/Offers';
 import Contact from './components/Contact';
 import Cart from './components/Cart';
 import Footer from './components/Footer';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -58,6 +59,7 @@ function App() {
         <Contact />
       </main>
       <Footer />
+      <SpeedInsights />
     </div>
   );
 }
