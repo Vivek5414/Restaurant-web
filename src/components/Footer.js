@@ -10,16 +10,16 @@ const Footer = () => {
             <h3>Delicious Bites</h3>
             <p>Serving delicious food with love and care since 2020.</p>
             <div className="social-links">
-              <a href="#" title="Facebook">
+              <a href="https://www.facebook.com" target="_blank" rel="noreferrer" title="Facebook">
                 <i className="fab fa-facebook"></i>
               </a>
-              <a href="#" title="Twitter">
+              <a href="https://www.twitter.com" target="_blank" rel="noreferrer" title="Twitter">
                 <i className="fab fa-twitter"></i>
               </a>
-              <a href="#" title="Instagram">
+              <a href="https://www.instagram.com" target="_blank" rel="noreferrer" title="Instagram">
                 <i className="fab fa-instagram"></i>
               </a>
-              <a href="#" title="LinkedIn">
+              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" title="LinkedIn">
                 <i className="fab fa-linkedin"></i>
               </a>
             </div>
