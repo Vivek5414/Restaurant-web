@@ -1,0 +1,91 @@
+.offers {
+  background: linear-gradient(135deg, #fff8f2 0%, #f2f7ff 100%);
+  padding: 100px 20px;
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+}
+
+.offer-card {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 32px;
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  border-top: 5px solid var(--primary);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.offer-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+}
+
+.offer-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  margin: 0 auto 22px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.offer-card h3 {
+  font-size: 1.35rem;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+}
+
+.offer-card p {
+  color: var(--text-light);
+  margin-bottom: 20px;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.offer-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(228, 232, 238, 0.9);
+  flex-wrap: wrap;
+}
+
+.discount-badge {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.offer-code {
+  background: rgba(255, 235, 227, 0.9);
+  color: var(--primary);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .offers-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .offer-card {
+    padding: 24px;
+  }
+}
+

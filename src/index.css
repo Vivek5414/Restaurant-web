@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #FF6B35;
+  --primary-light: #FFE5D9;
+  --secondary: #FFA62B;
+  --background: #F7FBFF;
+  --light-bg: #FFFFFF;
+  --text-dark: #1F2933;
+  --text-light: #56606C;
+  --border: #E4E8EE;
+  --success: #27AE60;
+  --shadow: 0 12px 30px rgba(31, 41, 51, 0.08);
+  --shadow-lg: 0 20px 45px rgba(31, 41, 51, 0.12);
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100%;
+  background-image: radial-gradient(circle at top right, rgba(255, 107, 53, 0.12), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(255, 166, 43, 0.1), transparent 18%),
+    linear-gradient(135deg, #fbfbfd 0%, #f2f7fc 45%, #ecf4fb 100%);
+  color: var(--text-dark);
+}
+
+html, body, #root {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+button, input, textarea {
+  transition: all 0.25s ease;
+}
+
+::selection {
+  background: rgba(255, 107, 53, 0.2);
+  color: var(--text-dark);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 166, 43, 0.75);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 107, 53, 0.9);
+}
