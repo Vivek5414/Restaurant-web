@@ -24,12 +24,35 @@ A modern, responsive React-based restaurant website featuring an online ordering
 - Real-time cart total calculation
 - Tax calculation (8%)
 - Sliding cart sidebar
+- **User authentication required for checkout**
 
 💳 **Checkout Process**
 - Customer information form
 - Delivery address input
 - Order summary
 - Confirmation message
+- **Requires user login**
+
+🔐 **User Authentication**
+- User registration and login
+- Secure authentication with Supabase
+- Protected ordering system
+- Unique user accounts
+
+👨‍💼 **Admin Dashboard**
+- Separate admin login
+- View all contact enquiries
+- **View all customer orders with complete details**
+- **Customer contact information and delivery addresses**
+- Manage customer communications
+- Admin-only access
+
+👤 **Customer Dashboard**
+- **Personal order history**
+- **View order details and status**
+- **Order tracking with timestamps**
+- **Delivery address information**
+- **Order items and pricing breakdown**
 
 🎉 **Special Offers**
 - 4 promotional offers displayed
@@ -40,9 +63,10 @@ A modern, responsive React-based restaurant website featuring an online ordering
 ## Technologies Used
 
 - **React 18.2.0** - Frontend framework
+- **React Router DOM** - Client-side routing
+- **Supabase** - Backend as a Service (Authentication & Database)
 - **CSS3** - Styling with CSS variables and gradients
 - **Font Awesome** - Icons
-- **Unsplash API** - Food images
 - **React Icons** - Additional icons
 
 ## Installation
@@ -57,7 +81,51 @@ cd "Restaurant web"
 npm install
 ```
 
-3. **Start the development server**
+3. **Set up Supabase**
+   - Create a new project at [supabase.com](https://supabase.com)
+   - Go to Settings > API to get your project URL and anon key
+   - Copy `.env.example` to `.env` and replace with your values:
+   ```
+   REACT_APP_SUPABASE_URL=your_supabase_url
+   REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Set up database tables**
+   - In Supabase dashboard, go to SQL Editor
+   - Run the following SQL to create the tables:
+   ```sql
+   -- Contacts table
+   CREATE TABLE contacts (
+     id SERIAL PRIMARY KEY,
+     name TEXT NOT NULL,
+     email TEXT NOT NULL,
+     subject TEXT NOT NULL,
+     about TEXT NOT NULL,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+   );
+
+   -- Orders table
+   CREATE TABLE orders (
+     id SERIAL PRIMARY KEY,
+     user_id UUID NOT NULL,
+     customer_name TEXT NOT NULL,
+     customer_email TEXT NOT NULL,
+     customer_phone TEXT NOT NULL,
+     delivery_address TEXT NOT NULL,
+     delivery_city TEXT NOT NULL,
+     delivery_zipcode TEXT NOT NULL,
+     order_items JSONB NOT NULL,
+     subtotal DECIMAL(10,2) NOT NULL,
+     tax DECIMAL(10,2) NOT NULL,
+     total DECIMAL(10,2) NOT NULL,
+     status TEXT DEFAULT 'pending',
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+   );
+   ```
+   - Enable Row Level Security (RLS) on both tables in the Table Editor
+   - Create policies to allow inserts for anonymous users (contacts) and authenticated users (orders)
+
+5. **Start the development server**
 ```bash
 npm start
 ```
@@ -75,12 +143,21 @@ src/
 │   ├── MenuItem.js & MenuItem.css
 │   ├── Offers.js & Offers.css
 │   ├── Cart.js & Cart.css
-│   └── Footer.js & Footer.css
+│   ├── Contact.js & Contact.css
+│   ├── Footer.js & Footer.css
+│   ├── Login.js & Login.css
+│   ├── AdminDashboard.js & AdminDashboard.css
+│   ├── CustomerDashboard.js & CustomerDashboard.css
+│   └── ProtectedRoute.js
+├── contexts/
+│   └── AuthContext.js
 ├── App.js & App.css
 ├── index.js & index.css
+├── supabaseClient.js
 public/
 ├── index.html
 package.json
+.env (create this file)
 ```
 
 ## Color Palette
@@ -130,12 +207,32 @@ package.json
 
 ## How to Use
 
-1. **Browse Menu**: Use category buttons to filter items
-2. **Add Items**: Click the "+" button on any item to add to cart
-3. **View Cart**: Click the shopping cart icon in the header
-4. **Checkout**: Click "Proceed to Checkout" in the cart
+### For Customers:
+1. **Register/Login**: Click the "Login" button in the header to create an account or sign in
+2. **Browse Menu**: Use category buttons to filter items
+3. **Add Items**: Click the "+" button on any item to add to cart
+4. **Checkout**: Click "Proceed to Checkout" in the cart (requires login)
 5. **Enter Details**: Fill in delivery information
 6. **Place Order**: Complete the order
+7. **View Orders**: Access "My Orders" from the header to view order history
+
+### For Admins:
+1. **Register as Admin**: Sign up with role "Admin"
+2. **Login**: Use your admin credentials
+3. **Access Dashboard**: Navigate to `/admin` or use admin login
+4. **View Orders**: See all customer orders with complete details
+5. **View Enquiries**: See all contact form submissions
+6. **Manage Communications**: Review customer messages and contact details
+
+## Admin Access
+
+To create an admin account:
+1. Go to the login page
+2. Click "Sign Up"
+3. Select "Admin" as the role
+4. Complete registration
+5. Login with admin credentials
+6. Access the admin dashboard at `/admin`
 
 ## Responsive Design
 

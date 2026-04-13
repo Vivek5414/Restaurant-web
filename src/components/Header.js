@@ -1,7 +1,34 @@
 import React from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Header.css';
 
-const Header = ({ cartCount, onCartClick }) => {
+const Header = ({ cartCount, onCartClick, user, onSignOut, isAdmin }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSignOut = async () => {
+    await onSignOut();
+    navigate('/');
+  };
+
+  const handleNavClick = (sectionId) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      // Wait for navigation to complete, then scroll
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <header className="header">
       <div className="container">
@@ -12,16 +39,32 @@ const Header = ({ cartCount, onCartClick }) => {
           </div>
           
           <nav className="nav">
-            <a href="#home">Home</a>
-            <a href="#menu">Menu</a>
-            <a href="#offers">Offers</a>
-            <a href="#contact">Contact</a>
+            <button onClick={() => handleNavClick('home')} className="nav-link">Home</button>
+            <button onClick={() => handleNavClick('menu')} className="nav-link">Menu</button>
+            <button onClick={() => handleNavClick('offers')} className="nav-link">Offers</button>
+            <button onClick={() => handleNavClick('contact')} className="nav-link">Contact</button>
           </nav>
 
-          <button className="cart-btn" onClick={onCartClick}>
-            <i className="fas fa-shopping-cart"></i>
-            {cartCount > 0 && <span className="badge">{cartCount}</span>}
-          </button>
+          <div className="header-actions">
+            {user ? (
+              <div className="user-menu">
+                <span>Welcome, {user.email}</span>
+                {isAdmin ? (
+                  <Link to="/admin" className="dashboard-link">Admin Dashboard</Link>
+                ) : (
+                  <Link to="/dashboard" className="dashboard-link">My Orders</Link>
+                )}
+                <button onClick={handleSignOut} className="sign-out-btn">Sign Out</button>
+              </div>
+            ) : (
+              <Link to="/login" className="login-btn">Login</Link>
+            )}
+
+            <button className="cart-btn" onClick={onCartClick}>
+              <i className="fas fa-shopping-cart"></i>
+              {cartCount > 0 && <span className="badge">{cartCount}</span>}
+            </button>
+          </div>
         </div>
       </div>
     </header>

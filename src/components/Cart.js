@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 import './Cart.css';
 
-const Cart = ({ items, onRemove, onUpdateQuantity, onClose }) => {
+const Cart = ({ items, onRemove, onUpdateQuantity, onClose, user }) => {
   const [step, setStep] = useState('review'); // review or checkout
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
@@ -11,6 +13,7 @@ const Cart = ({ items, onRemove, onUpdateQuantity, onClose }) => {
     city: '',
     zipcode: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const tax = subtotal * 0.08;
@@ -24,18 +27,60 @@ const Cart = ({ items, onRemove, onUpdateQuantity, onClose }) => {
     }));
   };
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
-    alert(`Order placed successfully!\n\nName: ${customerInfo.name}\nTotal: $${total.toFixed(2)}\n\nThank you for your order!`);
-    setStep('review');
-    setCustomerInfo({
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      city: '',
-      zipcode: ''
-    });
+    setIsSubmitting(true);
+
+    if (!supabase) {
+      alert('Database not configured. Please check your Supabase setup.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const orderData = {
+        user_id: user.id,
+        customer_name: customerInfo.name,
+        customer_email: customerInfo.email,
+        customer_phone: customerInfo.phone,
+        delivery_address: customerInfo.address,
+        delivery_city: customerInfo.city,
+        delivery_zipcode: customerInfo.zipcode,
+        order_items: items,
+        subtotal: subtotal,
+        tax: tax,
+        total: total,
+        status: 'pending'
+      };
+
+      const { error } = await supabase
+        .from('orders')
+        .insert([orderData]);
+
+      if (error) {
+        console.error('Error saving order:', error);
+        alert('There was an error placing your order. Please try again.');
+      } else {
+        alert(`Order placed successfully!\n\nOrder ID: ${Date.now()}\nName: ${customerInfo.name}\nTotal: $${total.toFixed(2)}\n\nThank you for your order!`);
+        setStep('review');
+        setCustomerInfo({
+          name: '',
+          email: '',
+          phone: '',
+          address: '',
+          city: '',
+          zipcode: ''
+        });
+        // Clear cart items
+        items.forEach(item => onRemove(item.id));
+        onClose();
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('There was an error processing your order. Please try again.');
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -102,9 +147,23 @@ const Cart = ({ items, onRemove, onUpdateQuantity, onClose }) => {
                   </div>
                 </div>
 
+                {!user && (
+                  <div className="login-prompt">
+                    <p>Please <Link to="/login" onClick={onClose}>login</Link> to place an order</p>
+                  </div>
+                )}
+
                 <button 
                   className="checkout-btn"
-                  onClick={() => setStep('checkout')}
+                  onClick={() => {
+                    if (!user) {
+                      alert('Please login to place an order');
+                      onClose();
+                      // Could redirect to login, but for now just alert
+                    } else {
+                      setStep('checkout');
+                    }
+                  }}
                 >
                   Proceed to Checkout
                 </button>
@@ -174,8 +233,8 @@ const Cart = ({ items, onRemove, onUpdateQuantity, onClose }) => {
                     <h4>Order Total: ${total.toFixed(2)}</h4>
                   </div>
 
-                  <button type="submit" className="place-order-btn">
-                    Place Order
+                  <button type="submit" className="place-order-btn" disabled={isSubmitting}>
+                    {isSubmitting ? 'Placing Order...' : 'Place Order'}
                   </button>
                   
                   <button 
