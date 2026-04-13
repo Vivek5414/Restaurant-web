@@ -7,7 +7,7 @@ const Contact = () => {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    about: ''
   });
   const [status, setStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +40,7 @@ const Contact = () => {
       setStatus('There was a problem saving your message. Please try again.');
     } else {
       setStatus('Thank you for reaching out! We will reply soon.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setFormData({ name: '', email: '', subject: '', about: '' });
     }
 
     setIsSubmitting(false);
@@ -97,10 +97,10 @@ const Contact = () => {
             required
           />
           <textarea
-            name="message"
+            name="about"
             rows="6"
-            placeholder="Tell us how we can help..."
-            value={formData.message}
+            placeholder="Tell us about your inquiry..."
+            value={formData.about}
             onChange={handleChange}
             required
           />
